@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const { User } = require("../models");
+const redisClient = require("../utils/redis-util");
 const jsonwebtoken = require("jsonwebtoken");
 const jwt = require("../utils/jwt-util");
 const { verify, refreshVerify, sign } = require("../utils/jwt-util");
@@ -47,7 +48,7 @@ router.post("/login", async (req, res) => {
       const accessToken = jwt.sign(tokenData);
       const refreshToken = jwt.refresh();
 
-      // redisClient.set(tokenData.id.toString(), refreshToken);
+      redisClient.set(tokenData.id.toString(), refreshToken);
       res.cookie("refreshToken", refreshToken, {
         maxAge: 60 * 60 * 24 * 14,
         httpOnly: true,

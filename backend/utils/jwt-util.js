@@ -1,4 +1,4 @@
-// const redisClient = require("./redis-util");
+const redisClient = require("./redis-util");
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -41,13 +41,12 @@ module.exports = {
     });
   },
   refreshVerify: async (token, userId) => {
-    // const getAsync = promisify(redisClient.get).bind(redisClient);
+    const getAsync = promisify(redisClient.get).bind(redisClient);
 
     try {
-      //   const data = await getAsync.get(userId);
+      const data = await getAsync.get(userId);
 
-      //   if (token === data) {
-      if (true) {
+      if (token === data) {
         try {
           jwt.verify(token, secret);
           return true;
@@ -55,7 +54,7 @@ module.exports = {
           return false;
         }
       } else {
-        return false; // redis 써서 refresh token 검증 가능.
+        return false;
       }
     } catch (err) {
       return false;
