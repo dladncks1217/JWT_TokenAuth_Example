@@ -9,12 +9,12 @@ module.exports = {
     const payload = {
       id: user.id,
       nick: user.nick,
-      role: user.role,
+      name: user.name,
     };
 
     return jwt.sign(payload, secret, {
       algorithm: "HS256",
-      expiresIn: "15m",
+      expiresIn: "30m",
     });
   },
   verify: (token) => {
@@ -25,7 +25,7 @@ module.exports = {
         ok: true,
         userId: decoded.id,
         nick: decoded.nick,
-        role: decoded.role,
+        name: decoded.name,
       };
     } catch (err) {
       return {
