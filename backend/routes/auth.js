@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
 
   const exUser = await User.findOne({ where: { email } });
 
-  console.log("exUser" + exUser.nick);
+  if (exUser) console.log("exUser" + exUser.nick);
   if (exUser) {
     const result = await bcrypt.compare(password, exUser.password);
     if (result) {
@@ -52,7 +52,8 @@ router.post("/login", async (req, res) => {
       res.cookie("refreshToken", refreshToken, {
         maxAge: 60 * 60 * 24 * 14,
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
+        secure: true,
       });
 
       res.status(200).send({
@@ -75,7 +76,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/getnewtoken", async (req, res, next) => {
+router.post("/reissuance", async (req, res) => {
+  console.log(req.header.cookie);
   if (req.headers.authorization && req.headers.cookie) {
     const accessToken = req.headers.authorization.split("Bearer ")[1];
     const refreshToken = req.headers.cookie.split("=")[1];
@@ -117,6 +119,11 @@ router.post("/getnewtoken", async (req, res, next) => {
         });
       }
     }
+  } else {
+    res.status(403).send({
+      ok: false,
+      error: "토큰이 없습니다.",
+    });
   }
 });
 
