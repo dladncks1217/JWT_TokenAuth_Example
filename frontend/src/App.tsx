@@ -1,26 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useQueryClient } from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import GetNumber from "./components/GetNumber";
+import LoginForm from "./components/LoginForm";
+import { useUserData } from "./hooks/api/useUserData";
+import { userData } from "./types/types";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+  const queryClient = useQueryClient();
+  const userData = queryClient.getQueryData<userData>(["userData"]);
+
+  useUserData();
+  const exist = userData?.nick;
+  useEffect(() => {}, [exist]);
+  return <div className="App">{exist ? <GetNumber /> : <LoginForm />}</div>;
+};
 
 export default App;
