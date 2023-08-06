@@ -14,7 +14,7 @@ module.exports = {
 
     return jwt.sign(payload, secret, {
       algorithm: "HS256",
-      expiresIn: "3m",
+      expiresIn: "15m",
     });
   },
   verify: (token) => {
