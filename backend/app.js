@@ -12,7 +12,12 @@ require("dotenv").config();
 const app = express();
 sequelize.sync();
 
-app.use(cors("*"));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
